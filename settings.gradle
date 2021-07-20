@@ -1,0 +1,2 @@
+rootProject.name = "Food Wastage Management"
+include ':app'
