@@ -1,2 +1,12 @@
-package com.steph.foodwastagemanagement;public class User {
+package com.steph.foodwastagemanagement;
+
+public class User {
+    public String fullName, email;
+    public User(){
+
+    }
+    public User(String fullName,String email){
+        this.fullName=fullName;
+        this.email=email;
+    }
 }

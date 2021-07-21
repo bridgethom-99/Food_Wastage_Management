@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Food Wastage Management</string>
+    <string name="food_aid">FOOD AID</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="enter_your_email">enter_your_email</string>
+    <string name="enter_your_password">enter_your_password</string>
+    <string name="register">register</string>
+    <string name="enter_your_full_name">Enter your full name</string>
 </resources>
