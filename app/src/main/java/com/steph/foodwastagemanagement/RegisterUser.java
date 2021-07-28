@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,22 +24,41 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
-public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
-    private TextView banner, register;
+public class RegisterUser extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+    private TextView banner, register, user_type;
     private EditText editTextfullName, editTextemail, editTextpassword;
     private ProgressBar ProgressBar;
     private FirebaseAuth mAuth;
+    private String mSpinnerLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
         mAuth = FirebaseAuth.getInstance();
+
+        Spinner userSpinner = (Spinner) findViewById(R.id.user_spinner);
+
+        if (userSpinner !=null){
+            userSpinner.setOnItemSelectedListener(this);
+        }
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.register_spinner, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        if (userSpinner !=null){
+            userSpinner.setAdapter(adapter);
+        }
+
         banner = (TextView) findViewById(R.id.banner);
         banner.setOnClickListener(this);
 
         register = (Button) findViewById(R.id.register);
         register.setOnClickListener(this);
+
+        user_type = (TextView) findViewById(R.id.user_type);
+        user_type.setOnClickListener(this);
 
         editTextfullName = (EditText) findViewById(R.id.fullName);
         editTextemail = (EditText) findViewById(R.id.email);
@@ -61,21 +83,28 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String email = editTextemail.getText().toString().trim();
         String password = editTextpassword.getText().toString().trim();
         String fullName = editTextfullName.getText().toString().trim();
+        Spinner userSpinner = (Spinner) findViewById(R.id.user_spinner);
+
+
+
         if (fullName.isEmpty()) {
             editTextfullName.setError("Full name is required");
             editTextfullName.requestFocus();
             return;
-        }
-            if (email.isEmpty()) {
+           }
+
+           if (email.isEmpty()) {
                 editTextemail.setError("Email is required");
                 editTextemail.requestFocus();
                 return;
-            }
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+           }
+
+           if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 editTextemail.setError("please provide a valid email");
                 editTextemail.requestFocus();
                 return;
-            }
+           }
+
             if (password.isEmpty()) {
                 editTextpassword.setError("password is required");
                 editTextpassword.requestFocus();
@@ -86,19 +115,29 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                 editTextpassword.requestFocus();
                 return;
             }
+           if (userSpinner !=null){
+            userSpinner.setOnItemSelectedListener(this);
+           }
+
+           /* if (user_type.isEmpty()){
+                editTextuser.setError("User type is required");
+                editTextuser.requestFocus();
+                return;
+            }
+            */
             ProgressBar.setVisibility(View.VISIBLE);
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        User user = new User(fullName, email);
+                        User user = new User(fullName, email, mSpinnerLabel);
                         FirebaseDatabase.getInstance().getReference("Users")
                                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(RegisterUser.this, "user has been registered successfully!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegisterUser.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
                                     ProgressBar.setVisibility(View.GONE);
                                 } else {
                                     Toast.makeText(RegisterUser.this, "Failed to register!Try again", Toast.LENGTH_LONG).show();
@@ -116,7 +155,22 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
 
         }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        mSpinnerLabel = adapterView.getItemAtPosition(i).toString();
+
+        Toast myToast = Toast.makeText(this,"Selected user is: " +mSpinnerLabel, Toast.LENGTH_SHORT);
+        myToast.show();
     }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        Toast toast = Toast.makeText(this, "Nothing Selected", Toast.LENGTH_SHORT);
+        toast.show();
+
+    }
+}
 
 
 

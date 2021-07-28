@@ -61,7 +61,27 @@
         app:layout_constraintLeft_toLeftOf="@+id/emailAddressTitle"
         />
 
+    <TextView
+        android:id="@+id/userTypeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/fullName"
+        app:layout_constraintLeft_toLeftOf="@+id/greeting"
+        />
 
+    <TextView
+        android:id="@+id/userType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/fullNameTitle"
+        app:layout_constraintLeft_toLeftOf="@+id/emailAddressTitle"
+        />
 
 
     <Button
@@ -70,8 +90,8 @@
         android:layout_height="wrap_content"
         android:text="@string/logout"
         android:textStyle="bold"
-        android:backgroundTint="#0ED6B9"
-        android:textColor="@color/white"
+        android:backgroundTint="#2F4454"
+        android:textColor="#FFCB9A"
         android:textSize="20sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -12,7 +12,13 @@
     <string name="logout">Logout</string>
     <string name="email_address">Email Address:</string>
     <string name="full_name">Full Name:</string>
-
+    <string name="user"> User:</string>
+    <string-array name="register_spinner">
+        <item>Event Organiser</item>
+        <item>Hotel Manager</item>
+        <item>Home Manager</item>
+        <item>Other</item>
+    </string-array>
 
 
 </resources>
