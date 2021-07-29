@@ -6,19 +6,16 @@
     <string name="enter_your_email">Enter your e-mail</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="register">Register</string>
-    <string name="enter_your_full_name">Enter your full name</string>
+
     <string name="enter_your_email_address">Enter your e-mail address</string>
     <string name="welcome">Welcome!</string>
     <string name="logout">Logout</string>
     <string name="email_address">Email Address:</string>
     <string name="full_name">Full Name:</string>
-    <string name="user"> User:</string>
-    <string-array name="register_spinner">
-        <item>Event Organiser</item>
-        <item>Hotel Manager</item>
-        <item>Home Manager</item>
-        <item>Other</item>
-    </string-array>
+    <string name="enter_your_full_name">Enter your full name</string>
+
+    <string name="reset">Reset</string>
+    <string name="enter_your_phone_number">enter your phone number</string>
 
 
 </resources>
