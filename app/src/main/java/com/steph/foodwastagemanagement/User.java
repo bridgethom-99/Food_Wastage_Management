@@ -1,14 +1,20 @@
 package com.steph.foodwastagemanagement;
 
+import android.icu.text.Transliterator;
+
 public class User {
-    public String fullName, email;
+    public String fullName, Email,Position,PhoneNumber;
+
+
 
     public User(){
 
     }
 
-    public User(String fullName, String email) {
+    public User(String fullName, String email, String position, String phonenumber) {
         this.fullName = fullName;
-        this.email = email;
+         Email=email;
+        Position=position;
+        PhoneNumber=phonenumber;
     }
 }
