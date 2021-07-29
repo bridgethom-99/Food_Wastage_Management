@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,58 +19,54 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
-public class RegisterUser extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-    private TextView banner, register, user_type;
-    private EditText editTextfullName, editTextemail, editTextpassword;
+public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
+    private TextView  register;
+    private EditText txt_fullName, txt_email, txt_password,phone_number;
     private ProgressBar ProgressBar;
     private FirebaseAuth mAuth;
-    private String mSpinnerLabel;
+    RadioButton mevent,mrestaurant,mchildren;
+    DatabaseReference databaseReference;
+    FirebaseDatabase firebaseDatabase;
+    String position="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
         mAuth = FirebaseAuth.getInstance();
-
-        Spinner userSpinner = (Spinner) findViewById(R.id.user_spinner);
-
-        if (userSpinner !=null){
-            userSpinner.setOnItemSelectedListener(this);
-        }
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.register_spinner, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        if (userSpinner !=null){
-            userSpinner.setAdapter(adapter);
-        }
-
-        banner = (TextView) findViewById(R.id.banner);
-        banner.setOnClickListener(this);
+       // banner = (TextView) findViewById(R.id.banner);
+       // banner.setOnClickListener(this);
 
         register = (Button) findViewById(R.id.register);
         register.setOnClickListener(this);
 
-        user_type = (TextView) findViewById(R.id.user_type);
-        user_type.setOnClickListener(this);
-
-        editTextfullName = (EditText) findViewById(R.id.fullName);
-        editTextemail = (EditText) findViewById(R.id.email);
-        editTextpassword = (EditText) findViewById(R.id.password);
+       txt_fullName = (EditText) findViewById(R.id.txt_fullName);
+        txt_email = (EditText) findViewById(R.id.txt_email);
+        txt_password = (EditText) findViewById(R.id.txt_password);
+        phone_number=(EditText) findViewById(R.id.phone_number);
         ProgressBar = (ProgressBar) findViewById(R.id.ProgressBar);
+        mrestaurant=(RadioButton)findViewById(R.id.restaurant);
+        mevent=(RadioButton)findViewById(R.id.event);
+        mchildren=(RadioButton)findViewById(R.id.children);
+        databaseReference=FirebaseDatabase.getInstance().getReference("User");
+
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.banner:
-                startActivity(new Intent(this, MainActivity.class));
-                break;
+           // case R.id.banner:
+                //startActivity(new Intent(this, MainActivity.class));
+                //break;
             case R.id.register:
                 register();
                 break;
@@ -80,100 +75,83 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     }
 
     private void register() {
-        String email = editTextemail.getText().toString().trim();
-        String password = editTextpassword.getText().toString().trim();
-        String fullName = editTextfullName.getText().toString().trim();
-        Spinner userSpinner = (Spinner) findViewById(R.id.user_spinner);
-
-
-
+        String position="";
+        String email = txt_email.getText().toString().trim();
+        String password = txt_password.getText().toString().trim();
+        String fullName = txt_fullName.getText().toString().trim();
+        String phonenumber=phone_number.getText().toString().trim();
         if (fullName.isEmpty()) {
-            editTextfullName.setError("Full name is required");
-            editTextfullName.requestFocus();
+            txt_fullName.setError("Full name is required");
+            txt_fullName.requestFocus();
             return;
-           }
-
-           if (email.isEmpty()) {
-                editTextemail.setError("Email is required");
-                editTextemail.requestFocus();
-                return;
-           }
-
-           if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                editTextemail.setError("please provide a valid email");
-                editTextemail.requestFocus();
-                return;
-           }
-
-            if (password.isEmpty()) {
-                editTextpassword.setError("password is required");
-                editTextpassword.requestFocus();
-                return;
-            }
-            if (password.length() < 6) {
-                editTextpassword.setError("Min password length should be 6 characters!");
-                editTextpassword.requestFocus();
-                return;
-            }
-           if (userSpinner !=null){
-            userSpinner.setOnItemSelectedListener(this);
-           }
-
-           /* if (user_type.isEmpty()){
-                editTextuser.setError("User type is required");
-                editTextuser.requestFocus();
-                return;
-            }
-            */
-            ProgressBar.setVisibility(View.VISIBLE);
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        User user = new User(fullName, email, mSpinnerLabel);
-                        FirebaseDatabase.getInstance().getReference("Users")
-                                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(RegisterUser.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
-                                    ProgressBar.setVisibility(View.GONE);
-                                } else {
-                                    Toast.makeText(RegisterUser.this, "Failed to register!Try again", Toast.LENGTH_LONG).show();
-                                    ProgressBar.setVisibility(View.GONE);
-                                }
-
-                            }
-                        });
-                    } else {
-                        Toast.makeText(RegisterUser.this, "Failed to register!Try again", Toast.LENGTH_LONG).show();
-                        ProgressBar.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-
+        }
+        if (phonenumber.isEmpty()){
+            phone_number.setError("Phone number is required");
+            phone_number.requestFocus();
+        }
+        if (email.isEmpty()) {
+           txt_email.setError("Email is required");
+           txt_email.requestFocus();
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+          txt_email.setError("please provide a valid email");
+            txt_email.requestFocus();
+            return;
+        }
+        if (password.isEmpty()) {
+            txt_password.setError("password is required");
+           txt_password.requestFocus();
+            return;
+        }
+        if (password.length() < 6) {
+            txt_password.setError("Min password length should be 6 characters!");
+           txt_password.requestFocus();
+            return;
         }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        mSpinnerLabel = adapterView.getItemAtPosition(i).toString();
+        if (mevent.isChecked()){
+            position="Event manager";
 
-        Toast myToast = Toast.makeText(this,"Selected user is: " +mSpinnerLabel, Toast.LENGTH_SHORT);
-        myToast.show();
-    }
+        }else if(mrestaurant.isChecked()){
+            position="Hotel manager";
+        }else {
+            position="Children's home manager";
+        }
+        ProgressBar.setVisibility(View.VISIBLE);
+        String finalPosition = position;
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    User user = new User(fullName, email, finalPosition,phonenumber);
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        Toast toast = Toast.makeText(this, "Nothing Selected", Toast.LENGTH_SHORT);
-        toast.show();
+
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(RegisterUser.this, "user has been registered successfully!", Toast.LENGTH_LONG).show();
+                                ProgressBar.setVisibility(View.GONE);
+                            } else {
+                                Toast.makeText(RegisterUser.this, "Failed to register!Try again", Toast.LENGTH_LONG).show();
+                                ProgressBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(RegisterUser.this, "Failed to register!Try again", Toast.LENGTH_LONG).show();
+                    ProgressBar.setVisibility(View.GONE);
+                }
+            }
+        });
+
 
     }
 }
-
-
-
 
 
 
