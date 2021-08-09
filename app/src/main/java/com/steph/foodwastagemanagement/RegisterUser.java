@@ -1,6 +1,5 @@
 package com.steph.foodwastagemanagement;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,19 +17,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
     private TextView  register;
-    private EditText txt_fullName, txt_email, txt_password,phone_number;
-    private ProgressBar ProgressBar;
-    private FirebaseAuth mAuth;
+    EditText txt_fullName, txt_email, txt_password,phone_number;
+    ProgressBar ProgressBar;
+    FirebaseAuth mAuth;
     RadioButton mevent,mrestaurant,mchildren;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;

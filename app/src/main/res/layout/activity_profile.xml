@@ -4,19 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back3"
+    android:background="@drawable/logo"
     tools:context=".ProfileActivity">
 
     <TextView
         android:id="@+id/greeting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
         android:text="@string/welcome"
+        android:textColor="@android:color/black"
         android:textSize="20sp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/greeting"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/greeting"
+        app:layout_constraintVertical_bias="0.003"
+        app:srcCompat="@drawable/ic_person_black" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_email_black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage"
+        app:layout_constraintVertical_bias="0.049" />
 
     <TextView
         android:id="@+id/emailAddressTitle"
@@ -25,20 +51,34 @@
         android:text="@string/email_address"
         android:textStyle="bold"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/greeting"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="18dp"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage"
         app:layout_constraintLeft_toLeftOf="@+id/greeting"
-        />
 
+    />
     <TextView
         android:id="@+id/emailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:layout_marginStart="30dp"
+        android:textStyle="bold"
+        android:textColor="#c5cbe3"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toBottomOf="@+id/emailAddressTitle"
         app:layout_constraintLeft_toLeftOf="@+id/emailAddressTitle"
         />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_person_black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailAddress"
+        app:layout_constraintVertical_bias="0.049" />
 
     <TextView
         android:id="@+id/fullNameTitle"
@@ -47,20 +87,34 @@
         android:text="@string/full_name"
         android:textStyle="bold"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="18dp"
         app:layout_constraintTop_toBottomOf="@+id/emailAddress"
         app:layout_constraintLeft_toLeftOf="@+id/greeting"
-        />
-
+    />
     <TextView
         android:id="@+id/fullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:layout_marginStart="30dp"
+        android:textColor="#C5CBE3"
+        android:textStyle="bold"
+        android:layout_marginStart="25dp"
         app:layout_constraintTop_toBottomOf="@+id/fullNameTitle"
         app:layout_constraintLeft_toLeftOf="@+id/emailAddressTitle"
         />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_phone_black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullName"
+        app:layout_constraintVertical_bias="0.05" />
+
     <TextView
         android:id="@+id/PhoneNumberTitle"
         android:layout_width="wrap_content"
@@ -68,7 +122,8 @@
         android:text="Phone Number:"
         android:textStyle="bold"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="18dp"
         app:layout_constraintTop_toBottomOf="@+id/fullName"
         app:layout_constraintLeft_toLeftOf="@+id/greeting"
         />
@@ -76,28 +131,24 @@
         android:id="@+id/phone_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-
-
-
-
-        android:hint="enter your phone number"
-
+        android:layout_marginStart="25dp"
+        android:hint="Enter your phone number"
         android:inputType="phone"
         android:textSize="20sp"
+        android:textColor="#C5CBE3"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
-
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PhoneNumberTitle"
         app:layout_constraintLeft_toLeftOf="@+id/fullNameTitle"
         app:passwordToggleEnabled="true" />
+
     <RadioGroup
         android:id="@+id/radioGroup"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/fullName"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
@@ -116,48 +167,48 @@
             android:layout_height="wrap_content"
             android:text="Event Organiser"
             />
+
         <RadioButton
             android:id="@+id/children"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Children's Home manager"
+            android:text="Care Facility Manager"
             />
+
     </RadioGroup>
-
-    <TextView
-        android:id="@+id/userTypeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/user"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/fullName"
-        app:layout_constraintLeft_toLeftOf="@+id/greeting"
-        />
-
-    <TextView
-        android:id="@+id/userType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/fullNameTitle"
-        app:layout_constraintLeft_toLeftOf="@+id/emailAddressTitle"
-        />
 
 
     <Button
         android:id="@+id/signOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="227dp"
+        android:layout_height="57dp"
+        android:backgroundTint="#1F2833"
         android:text="@string/logout"
-        android:textStyle="bold"
-        android:backgroundTint="#2F4454"
-        android:textColor="#FFCB9A"
+        android:textColor="#C5CBE3"
         android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.543"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/changeProfile"
+        android:layout_width="227dp"
+        android:layout_height="57dp"
+        android:backgroundTint="#1F2833"
+        android:text="Change Profile"
+        android:textColor="#C5CBE3"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.543"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.805" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,47 +1,31 @@
 package com.steph.foodwastagemanagement;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView register, forgotpassword;
-    private EditText txt_email, txt_password;
-    private Button signIn;
+    EditText txt_email, txt_password;
+    Button signIn;
     RadioButton mevent,mrestaurant,mchildren;
-
-
-
-
-
 
     private FirebaseAuth mAuth;
 
     private ProgressBar progressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, ForgotPassword.class));
                 break;
 
-
-
         }
 
 
@@ -132,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-               /* assert user != null;
+               assert user != null;
                 if (user.isEmailVerified()) {
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 } else {
@@ -140,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this, "Check your email to verify your account!", Toast.LENGTH_LONG).show();
                 }
 
-                */
 
 
                 //redirect to user profile
