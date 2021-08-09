@@ -33,14 +33,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class  ProfileActivity extends AppCompatActivity {
 
-    private FirebaseUser user;
-    private FirebaseAuth fAuth;
-    private FirebaseFirestore fStore;
-    private DatabaseReference reference;
-    private StorageReference storageReference;
-    private String userID;
+    FirebaseUser user;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    DatabaseReference reference;
+    StorageReference storageReference;
+    String userID;
     private Button logout, changeProfileImage;
-    private TextView fullName, email, phone;
+    TextView fullName, email, phone;
     ImageView profileImage;
 
     @Override
@@ -66,12 +66,7 @@ public class  ProfileActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         StorageReference profileRef = storageReference.child("users/" +fAuth.getCurrentUser().getUid()+ "/profile.jpeg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImage);
-            }
-        });
+        profileRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(profileImage));
 
 
         final TextView greetingTextView = (TextView) findViewById(R.id.greeting);
@@ -116,9 +111,9 @@ public class  ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //open gallery
                 Intent i = new Intent(v.getContext(),EditProfile.class);
-                i.putExtra("fullName", "Tonny Tendwa");
-                i.putExtra("email", "tendwa@gmail.com");
-                i.putExtra("phone", "09732462748");
+                i.putExtra("fullName", "John Doe");
+                i.putExtra("Email", "jdoe@gmail.com");
+                i.putExtra("PhoneNumber", "0000000000");
                 startActivity(i);
               //  Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                // startActivityForResult(openGalleryIntent,1000);

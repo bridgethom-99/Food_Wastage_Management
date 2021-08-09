@@ -19,8 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView register, forgotpassword;
-    private EditText txt_email, txt_password;
-    private Button signIn;
+    EditText txt_email, txt_password;
+    Button signIn;
     RadioButton mevent,mrestaurant,mchildren;
 
     private FirebaseAuth mAuth;
