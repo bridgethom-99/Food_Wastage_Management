@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "692720725839",
+    "firebase_url": "https://foodwaste-dfe99-default-rtdb.firebaseio.com",
+    "project_id": "foodwaste-dfe99",
+    "storage_bucket": "foodwaste-dfe99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692720725839:android:bd8fcc0a36e3ce43b49f3a",
+        "android_client_info": {
+          "package_name": "com.steph.foodwastagemanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692720725839-m4vb6r35ulmc5scsec54nsdfn0telcts.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-gYXv896OIZx3u1E1ll5AxhBm4LXKumk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692720725839-m4vb6r35ulmc5scsec54nsdfn0telcts.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
