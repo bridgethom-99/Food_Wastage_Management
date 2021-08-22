@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.forgotpassword) {
             startActivity(new Intent(this, ForgotPassword.class));
         } else if (id == R.id.login_button) {
-            Toast.makeText(MainActivity.this, "PROCESSING....",
+            Toast.makeText(MainActivity.this, "Processing....",
                     Toast.LENGTH_LONG).show();
             // get the email and password entered by the user
             String email = txt_email.getText().toString().trim();
