@@ -11,6 +11,6 @@ public class RestaurantManager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_manager);
-        startActivity(new Intent(RestaurantManager.this, ProfileActivity.class));
+
     }
 }

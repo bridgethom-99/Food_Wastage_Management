@@ -65,7 +65,7 @@ public class  ProfileActivity extends AppCompatActivity {
         userID = fAuth.getCurrentUser().getUid();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        StorageReference profileRef = storageReference.child("users/" +fAuth.getCurrentUser().getUid()+ "/profile.jpeg");
+        StorageReference profileRef = storageReference.child("Users/" +fAuth.getCurrentUser().getUid()+ "/profile.jpeg");
         profileRef.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(profileImage));
 
 
@@ -81,7 +81,7 @@ public class  ProfileActivity extends AppCompatActivity {
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               User userProfile = snapshot.getValue(User.class);
+               Users userProfile = snapshot.getValue(Users.class);
 
                if (userProfile !=null){
 
