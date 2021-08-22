@@ -124,12 +124,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     final TextView greetingTextView = (TextView) findViewById(R.id.greeting);
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Users userProfile = dataSnapshot.getValue(Users.class);
-                        String fullName = userProfile.fullName;
+
+
+
                         String position = dataSnapshot.child("Position").getValue().toString();
                         if( position.equals("Event manager")) {
                             startActivity(new Intent(MainActivity.this, EventOrganiser.class));
-                            greetingTextView.setText(String.format("Welcome, %s!", fullName));
+
                         } else if (position.equals("Hotel manager")) {
                             startActivity(new Intent(MainActivity.this, RestaurantManager.class));
                         } else if (position.equals("Children's home manager")) {
