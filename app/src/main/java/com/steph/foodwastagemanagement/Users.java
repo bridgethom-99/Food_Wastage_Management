@@ -1,18 +1,21 @@
 package com.steph.foodwastagemanagement;
 
-public class User {
+public class Users {
     public String fullName, Email,Position,PhoneNumber;
 
 
 
-    public User(){
+    public Users(){
 
     }
 
-    public User(String fullName, String email, String position, String phonenumber) {
+    public Users(String fullName, String email, String position, String phonenumber) {
         this.fullName = fullName;
         this.Email=email;
         this.Position=position;
         this.PhoneNumber=phonenumber;
+
+
     }
 }
+

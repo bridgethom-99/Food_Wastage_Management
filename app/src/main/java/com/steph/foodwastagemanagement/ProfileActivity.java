@@ -81,7 +81,7 @@ public class  ProfileActivity extends AppCompatActivity {
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               User userProfile = snapshot.getValue(User.class);
+               Users userProfile = snapshot.getValue(Users.class);
 
                if (userProfile !=null){
 
