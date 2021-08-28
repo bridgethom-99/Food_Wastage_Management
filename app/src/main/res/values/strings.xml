@@ -1,3 +1,4 @@
+
 <resources>
     <string name="app_name">Food Wastage Management</string>
     <string name="food_aid">FOOD AID</string>
@@ -17,6 +18,11 @@
     <string name="reset">Reset</string>
     <string name="enter_your_phone_number">enter your phone number</string>
     <string name="user">user</string>
-
+    <string-array name="spinner_label">
+        <item>Wedding</item>
+        <item>Birthday Party</item>
+        <item>Graduation party</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>

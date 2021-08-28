@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.errorprone.annotations.Var;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
     public static final String TAG = "YOUR-TAG-NAME";
 
     private TextView register, forgotpassword;
@@ -91,79 +91,88 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //create a method that will check if the user exists in our database reference
-                            checkUserExistence();
-                        } else {
-                            //if the user does not exist in the database reference throw a toast
-                            Toast.makeText(MainActivity.this, "Couldn't login, Invalid credentials", Toast.LENGTH_SHORT).show();
+                            if (FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                                checkUserExistence();
+
+                            } else {
+                                //if the user does not exist in the database reference throw a toast
+                                Toast.makeText(MainActivity.this, "Please verify your email before login", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
-                });
-            } else {
-                //if the fields for email and password were not completed show a toast
-                Toast.makeText(MainActivity.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+
+                 else {
+                    //if the fields for email and password were not completed show a toast
+                    Toast.makeText(MainActivity.this, "Fields not complete or invalid credentials", Toast.LENGTH_SHORT).show();
+                }
             }
+
+
+    }
+
+
+
+
+
+
+
+
+
+        //check if the user exists and redirect to their role
+        public void checkUserExistence () {
+            //check the user existence of the user using the user id in users database reference
+            final String user_id = mAuth.getCurrentUser().getUid();
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference uidRef = rootRef.child("Users").child(user_id);
+            //call the method addValueEventListener on the database reference of the user to determine  if the current userID supplied exists in our database reference
+            uidRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //get a dataSnapshot of the users database reference to determine if current user exists
+
+                    //if the users exists direct the user to the Main Activity
+                    DatabaseReference uidRef = rootRef.child("Users").child(user_id);
+                    ValueEventListener valueEventListener = new ValueEventListener() {
+                        final TextView greetingTextView = (TextView) findViewById(R.id.greeting);
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                            String position = dataSnapshot.child("Position").getValue().toString();
+                            if (position.equals("Event manager")) {
+                                startActivity(new Intent(MainActivity.this, EventOrganiser.class));
+
+                            } else if (position.equals("Hotel manager")) {
+                                startActivity(new Intent(MainActivity.this, RestaurantManager.class));
+                            } else if (position.equals("Children's home manager")) {
+                                startActivity(new Intent(MainActivity.this, ChildrensHome.class));
+                            } else {
+                                Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, databaseError.getMessage());
+                        }
+                    };
+                    uidRef.addListenerForSingleValueEvent(valueEventListener);
+                    Toast.makeText(MainActivity.this, user_id, Toast.LENGTH_SHORT).show();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
         }
 
+
     }
-    //check if the user exists and redirect to their role
-    public void checkUserExistence() {
-        //check the user existence of the user using the user id in users database reference
-        final String user_id = mAuth.getCurrentUser().getUid();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference uidRef = rootRef.child("Users").child(user_id);
-        //call the method addValueEventListener on the database reference of the user to determine  if the current userID supplied exists in our database reference
-        uidRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //get a dataSnapshot of the users database reference to determine if current user exists
-
-                //if the users exists direct the user to the Main Activity
-                DatabaseReference uidRef = rootRef.child("Users").child(user_id);
-                ValueEventListener valueEventListener = new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
-                        String position = dataSnapshot.child("Position").getValue().toString();
-                        if( position.equals("Event manager")) {
-                            startActivity(new Intent(MainActivity.this, EventOrganiser.class));
-
-                        } else if (position.equals("Hotel manager")) {
-                            startActivity(new Intent(MainActivity.this, RestaurantManager.class));
-                        } else if (position.equals("Children's home manager")) {
-                            startActivity(new Intent(MainActivity.this, ChildrensHome.class));
-                        } else {
-                            Toast.makeText(MainActivity.this,position, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, databaseError.getMessage());
-                    }
-                };
-                uidRef.addListenerForSingleValueEvent(valueEventListener);
-                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-
-
-
-
-}
-
-
-
 
 
 
