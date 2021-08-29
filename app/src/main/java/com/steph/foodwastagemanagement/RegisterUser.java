@@ -119,7 +119,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    User user = new User(fullName, email, finalPosition,phonenumber);
+                    Users user = new Users(fullName, email, finalPosition,phonenumber);
 
 
                     FirebaseDatabase.getInstance().getReference("Users")

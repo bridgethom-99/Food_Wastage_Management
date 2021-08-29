@@ -2,6 +2,8 @@ package com.steph.foodwastagemanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -11,19 +13,31 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String TAG = "YOUR-TAG-NAME";
 
     private TextView register, forgotpassword;
     EditText txt_email, txt_password;
     Button signIn;
-    RadioButton mevent,mrestaurant,mchildren;
+    RadioButton mevent, mrestaurant, mchildren;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseUsers;
 
     private ProgressBar progressBar;
 
@@ -35,20 +49,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
 
-        signIn = (Button) findViewById(R.id.signIn);
-        signIn.setOnClickListener(this);
 
-        txt_email = (EditText) findViewById(R.id.txt_email);
-        txt_password = (EditText) findViewById(R.id.txt_password);
+        //signIn = (Button) findViewById(R.id.login_button);
+        //signIn.setOnClickListener(this);
+
+        txt_email = (EditText) findViewById(R.id.login_email);
+        txt_password = (EditText) findViewById(R.id.login_password);
 
         forgotpassword = (TextView) findViewById(R.id.forgotpassword);
         forgotpassword.setOnClickListener(this);
 
 
-        mrestaurant=(RadioButton)findViewById(R.id.restaurant);
-        mevent=(RadioButton)findViewById(R.id.event);
-        mchildren=(RadioButton)findViewById(R.id.children);
-
+        mrestaurant = (RadioButton) findViewById(R.id.restaurant);
+        mevent = (RadioButton) findViewById(R.id.event);
+        mchildren = (RadioButton) findViewById(R.id.children);
 
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -57,97 +71,100 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
+    //set onclick listeners
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.register:
-                startActivity(new Intent(this, RegisterUser.class));
-                break;
-            case R.id.signIn:
-                userLogin();
-                break;
-            case R.id.forgotpassword:
-                startActivity(new Intent(this, ForgotPassword.class));
-                break;
-
+        int id = v.getId();
+        if (id == R.id.register) {
+            startActivity(new Intent(this, RegisterUser.class));
+        } else if (id == R.id.forgotpassword) {
+            startActivity(new Intent(this, ForgotPassword.class));
+        } else if (id == R.id.login_button) {
+            Toast.makeText(MainActivity.this, "PROCESSING....",
+                    Toast.LENGTH_LONG).show();
+            // get the email and password entered by the user
+            String email = txt_email.getText().toString().trim();
+            String password = txt_password.getText().toString().trim();
+            if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+                // use firebase authentication instance you create and call the method  signInWithEmailAndPassword method passing the email and password you got from the views   //Further call the addOnCompleteListener() method to handle the  Authentication result
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            //create a method that will check if the user exists in our database reference
+                            checkUserExistence();
+                        } else {
+                            //if the user does not exist in the database reference throw a toast
+                            Toast.makeText(MainActivity.this, "Couldn't login, Invalid credentials", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else {
+                //if the fields for email and password were not completed show a toast
+                Toast.makeText(MainActivity.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+            }
         }
-
 
     }
+    //check if the user exists and redirect to their role
+    public void checkUserExistence() {
+        //check the user existence of the user using the user id in users database reference
+        final String user_id = mAuth.getCurrentUser().getUid();
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference uidRef = rootRef.child("Users").child(user_id);
+        //call the method addValueEventListener on the database reference of the user to determine  if the current userID supplied exists in our database reference
+        uidRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //get a dataSnapshot of the users database reference to determine if current user exists
 
-
-    private void userLogin() {
-        String position="";
-
-        String email = txt_email.getText().toString().trim();
-        String password = txt_password.getText().toString().trim();
-
-        if (email.isEmpty()) {
-            txt_email.setError("Email is required!");
-            txt_email.requestFocus();
-            return;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            txt_email.setError("Please enter a valid email");
-            txt_email.requestFocus();
-            return;
-        }
-        if (password.isEmpty()) {
-            txt_password.setError("Password id required!");
-         txt_password.requestFocus();
-            return;
-        }
-
-        if (password.length() < 6) {
-          txt_password.setError("Minimum password length is 6 characters!");
-            txt_password.requestFocus();
-            return;
-        }
-
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                //if the users exists direct the user to the Main Activity
+                DatabaseReference uidRef = rootRef.child("Users").child(user_id);
+                ValueEventListener valueEventListener = new ValueEventListener() {
+                    final TextView greetingTextView = (TextView) findViewById(R.id.greeting);
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
 
 
-               assert user != null;
-                if (user.isEmailVerified()) {
-                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                } else {
-                    user.sendEmailVerification();
-                    Toast.makeText(MainActivity.this, "Check your email to verify your account!", Toast.LENGTH_LONG).show();
-                }
+                        String position = dataSnapshot.child("Position").getValue().toString();
+                        if( position.equals("Event manager")) {
+                            startActivity(new Intent(MainActivity.this, EventOrganiser.class));
 
+                        } else if (position.equals("Hotel manager")) {
+                            startActivity(new Intent(MainActivity.this, RestaurantManager.class));
+                        } else if (position.equals("Children's home manager")) {
+                            startActivity(new Intent(MainActivity.this, ChildrensHome.class));
+                        } else {
+                            Toast.makeText(MainActivity.this,position, Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(TAG, databaseError.getMessage());
+                    }
+                };
+                uidRef.addListenerForSingleValueEvent(valueEventListener);
+                Toast.makeText(MainActivity.this, user_id, Toast.LENGTH_SHORT).show();
 
-                //redirect to user profile
-                if (mevent.isChecked()){
-                    startActivity(new Intent(MainActivity.this, EventOrganiser.class));
-
-
-                }else if(mrestaurant.isChecked()){
-                    startActivity(new Intent(MainActivity.this, RestaurantManager.class));
-                }else {
-                    startActivity(new Intent(MainActivity.this, ChildrensHome.class));
-                }
-
-
-                // startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-
-            } else {
-
-                Toast.makeText(MainActivity.this, "Failed to login! Please check your credentials", Toast.LENGTH_LONG).show();
             }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
-
-
     }
+
+
+
+
+
 }
+
+
+
+
 
 
 
