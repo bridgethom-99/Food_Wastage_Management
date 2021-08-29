@@ -14,8 +14,5 @@ public class Users {
         this.Email=email;
         this.Position=position;
         this.PhoneNumber=phonenumber;
-
-
     }
 }
-

@@ -2,58 +2,60 @@ package com.steph.foodwastagemanagement;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ChildrensHome extends AppCompatActivity {
-
-    private FirebaseDatabase db = FirebaseDatabase.getInstance();
-    private DatabaseReference root = db.getReference().child("Events");
-    private RecyclerView mRecyclerView;
-    private MyAdapter adapter;
-    private ArrayList<Event> mList;
+    DatabaseReference reference;
+    String userID;
+    FirebaseAuth fAuth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_childrens_home);
         //startActivity(new Intent(ChildrensHome.this, ProfileActivity.class));
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mList = new ArrayList<>();
-        adapter = new MyAdapter(this, mList);
-        mRecyclerView.setAdapter(adapter);
 
-        root.addValueEventListener(new ValueEventListener() {
+        fAuth = FirebaseAuth.getInstance();
+        user = fAuth.getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = fAuth.getCurrentUser().getUid();
+
+        final TextView greetingTextView = (TextView) findViewById(R.id.greeting);
+
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mList.clear();
-               // String Availability= snapshot.child("Availability").getValue().toString();
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    Event event=dataSnapshot.getValue(Event.class);
-                    mList.add(event);
+                Users userProfile = snapshot.getValue(Users.class);
+
+                if (userProfile !=null){
+
+                    String fullName = userProfile.fullName;
+
+
+
+                    greetingTextView.setText(String.format("Welcome, %s!", fullName));
+
+
                 }
-                adapter.notifyDataSetChanged();
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ChildrensHome.this, "Something wrong happened!", Toast.LENGTH_LONG).show();
 
             }
         });
